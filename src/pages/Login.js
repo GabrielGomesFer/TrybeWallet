@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getEmail } from '../Redux/actions';
 import PropTypes from 'prop-types';
+// import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getEmail } from '../actions';
 
 class Login extends React.Component {
   state = {
@@ -20,18 +20,32 @@ class Login extends React.Component {
   };
 
   validaEmail = () => {
+    const { email } = this.state;
     const validator = /\S+@\w+\.\w+/;
     return validator.test(email); // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test
   };
 
   validButton = () => {
+    const { password } = this.state;
     const minpass = 6;
     if (this.validaEmail() && password.length >= minpass) {
       this.setState({
         isValid: false,
       });
+    } else {
+      this.setState({
+        isValid: true,
+      });
     }
   };
+
+  handleCLick = () => {
+    const { email } = this.state;
+    const { history, dispatch } = this.props;
+
+    dispatch(getEmail(email));
+    history.push('/carteira');
+  }
 
   render() {
     const { email, password, isValid } = this.state;
@@ -46,7 +60,7 @@ class Login extends React.Component {
             value={ email }
             data-testid="email-input"
             placeholder="Email"
-            onChange={ this.handleChange() }
+            onChange={ this.handleChange }
           />
           <br />
           <input
@@ -55,18 +69,16 @@ class Login extends React.Component {
             value={ password }
             data-testid="password-input"
             placeholder="Password"
-            onChange={ this.handleChange() }
+            onChange={ this.handleChange }
           />
-          <Link to="/carteira">
-            <button
-              type="submit"
-              name="submitButton"
-              disabled={ isValid }
-              onClick={ () => { dispatch(getEmail(email)); } }
-            >
-              Entrar
-            </button>
-          </Link>
+          <button
+            type="button"
+            name="submitButton"
+            disabled={ isValid }
+            onClick={ this.handleCLick }
+          >
+            Entrar
+          </button>
         </form>
       </div>
     );
@@ -74,11 +86,12 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
+  history: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  propLogEmail: state.email,
-});
+// const mapStateToProps = (state) => ({
+//   propLogEmail: state.email,
+// });
 
-export default connect(mapStateToProps)(Login);
+export default connect()(Login);
