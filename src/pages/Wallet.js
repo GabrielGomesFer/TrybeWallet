@@ -122,7 +122,8 @@ class Wallet extends React.Component {
                   </option>
                 ))
                 : (// console.log('existe')
-                  null)}
+                  null
+                )}
             </select>
           </label>
           <label htmlFor="method">
@@ -158,7 +159,7 @@ class Wallet extends React.Component {
             Adicionar despesa
           </button>
         </form>
-        <thead>
+        <table>
           <th>Descrição</th>
           <th>Tag</th>
           <th>Método de pagamento</th>
@@ -168,7 +169,45 @@ class Wallet extends React.Component {
           <th>Valor convertido</th>
           <th>Moeda de conversão</th>
           <th>Editar/Excluir</th>
-        </thead>
+          <tbody>
+            {
+              expenses.length > 0
+          && expenses.map((exp) => (
+            <tr key={ exp.id }>
+              <td>
+                {exp.description}
+              </td>
+              <td>
+                {exp.tag}
+              </td>
+              <td>
+                {exp.method}
+              </td>
+              <td>
+                {parseInt(exp.value, 10).toFixed(2)}
+              </td>
+              <td>
+                {exp.exchangeRates[exp.currency].name.split('/')[0]}
+                {/* o colchetes traz só aquela parte do q foi cortado */}
+              </td>
+              <td>
+                {parseFloat(exp.exchangeRates[exp.currency].ask).toFixed(2)}
+              </td>
+              <td>
+                {parseFloat(exp.value * exp.exchangeRates[exp.currency].ask).toFixed(2)}
+              </td>
+              <td>
+                Real
+              </td>
+              <td>
+                <button type="button">Editar</button>
+                <button type="button">Excluir</button>
+              </td>
+            </tr>
+          ))
+            }
+          </tbody>
+        </table>
       </div>
     );
   }
