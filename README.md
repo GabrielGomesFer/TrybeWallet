@@ -1,4 +1,6 @@
-# 🚧 README em construção 🚧
+# Para rodar o projeto:
+- npm install
+- npm start
 
 <!-- Olá, Tryber!
 
